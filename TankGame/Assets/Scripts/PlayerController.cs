@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour
     float mouseX;
     float mouseY;
 
-    [SerializeField] Transform turret;
+    
 
     Rigidbody rigid;
     Ray ray;
@@ -25,15 +25,12 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         rigid = GetComponent<Rigidbody>();
-        mainCamera = Camera.main;
     }
 
     private void Update()
     {
         verticalInput = Input.GetAxisRaw("Vertical");
         horizontalInput = Input.GetAxisRaw("Horizontal");
-
-        RotateTurret();
     }
 
     private void FixedUpdate()
@@ -60,22 +57,5 @@ public class PlayerController : MonoBehaviour
     void RotateTank()
     {
         transform.Rotate(Vector3.up, turnSpeed * horizontalInput * Time.deltaTime);
-    }
-
-    void RotateTurret()
-    {
-        ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out hit, Mathf.Infinity))
-        {
-            Vector3 pos = new Vector3(hit.point.x, turret.position.y, hit.point.z);
-
-            Vector3 directionToFace = pos - turret.position;
-            Quaternion targetRotation = Quaternion.LookRotation(directionToFace);
-            turret.rotation = Quaternion.Slerp(turret.rotation, targetRotation, Time.deltaTime);
-
-            if (Input.GetMouseButtonDown(0))
-                Instantiate(prefab, hit.point, Quaternion.identity);
-        }
     }
 }
